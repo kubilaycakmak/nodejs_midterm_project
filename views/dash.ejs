@@ -1,0 +1,42 @@
+<h1 class="mt-4">Dashboard</h1>
+<p class="lead mb-3">Welcome <%= name %></p>
+<a href="/auth/logout" class="btn btn-secondary">Logout</a>
+<h1 class="mt-4">Users</h1>
+<div class="card-list">
+<% for (item of users) { %>
+<div class="card" style="width: 18rem;">
+    <div class="card-img-top" src="" alt="Card image cap">
+        <p><%= item.name[0] %></p>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title"><%= item.name %></h5>
+      <p class="card-text"><%= item.email %></p>
+      <form action="/wave/<%= item.id %>" method="POST">
+        <button class="btn btn-primary w-100" type="submit">Wave 👋</button>
+      </form>
+      <!-- <a href="/wave/<%= item.id %>" data-method="POST" class="btn btn-primary w-100">Wave 👋</a> -->
+    </div>
+</div>
+<% } %>
+</div>
+
+<h1 class="mt-4">Waved Users</h1>
+<div class="card-list">
+  <% if(wavedList.length == 0) { %>
+    <div>No user</div>
+  <% }else{ %>
+    <% for (item of wavedList) { %>
+    <div class="card" style="width: 18rem;">
+        <div class="card-img-top" src="" alt="Card image cap">
+            <p><%= item.name[0] %></p>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"><%= item.name %></h5>
+          <p class="card-text"><%= item.email %></p>
+          <a href="/delete/<%= item._id %>" class="btn btn-primary w-100">Unwave 👋</a>
+        </div>
+    </div>
+    <% } %>
+  <% } %>   
+
+</div>
