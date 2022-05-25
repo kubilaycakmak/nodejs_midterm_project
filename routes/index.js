@@ -1,3 +1,4 @@
+const e = require('connect-flash');
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated } = require('../config/checkAuth');
@@ -19,46 +20,36 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
     });
 });
 
-router.post('/wave/:id', async (req, res) =>  {
+router.post('/wave/:email', ensureAuthenticated, async (req, res) =>  {
+    let localList = req.user.wavedList
 
-    const selectedUser = await User.find({"_id": req.params.id}, (user) => user);
-    let localWavedList = [];
-    localWavedList = req.user.wavedList
-
-    if(selectedUser[0]._id != req.user.id){
-        if(localWavedList.length !== 0){
-            localWavedList.forEach(user => {
-                if(user.email !== selectedUser[0].email){
-                    localWavedList.push(selectedUser[0]);
-                }else{
-                    console.log('person already added');
-                }
-            });
-        }else{
-            localWavedList.push(selectedUser[0]);
+    if(req.user.email == req.params.email){
+        console.log('you cannot add yourself');
+    }else{
+        if(req.params.email != null){
+            if(localList.find(user => user.email == req.params.email)){
+                console.log('there is a person with same email address');
+            }else{
+                const selectedUser = await User.find({email: req.params.email});
+                console.log(selectedUser[0]);
+                localList.push(selectedUser[0]);
+            }
         }
     }
-    req.user.wavedList = localWavedList;
 
-    // console.log(localWavedList);
-    
-    req.user.save();
+    req.user.wavedList = localList;
+    req.user.save()
     res.redirect('/dashboard');
 });
 
-router.get('/delete/:id', (req, res) => {
-    console.log(req.params.id);
+router.get('/wave/:email', (req, res) => {
+    console.log(req.params.email);
+    let localList = req.user.wavedList
 
-    let localWavedList = req.user.wavedList;
-    
-    let filteredWavedList = localWavedList.filter(function(value, index, arr) {
-        return value._id === req.params.id
-    })
-
-    req.user.wavedList = filteredWavedList;
+    localList = localList.filter(user => user.email !== req.params.email);
+    req.user.wavedList = localList;
     req.user.save();
     res.redirect('/dashboard');
-
 });
 
 module.exports = router;

@@ -11,10 +11,9 @@
     <div class="card-body">
       <h5 class="card-title"><%= item.name %></h5>
       <p class="card-text"><%= item.email %></p>
-      <form action="/wave/<%= item.id %>" method="POST">
+      <form action="/wave/<%= item.email %>" method="POST">
         <button class="btn btn-primary w-100" type="submit">Wave 👋</button>
       </form>
-      <!-- <a href="/wave/<%= item.id %>" data-method="POST" class="btn btn-primary w-100">Wave 👋</a> -->
     </div>
 </div>
 <% } %>
@@ -33,7 +32,7 @@
         <div class="card-body">
           <h5 class="card-title"><%= item.name %></h5>
           <p class="card-text"><%= item.email %></p>
-          <a href="/delete/<%= item._id %>" class="btn btn-primary w-100">Unwave 👋</a>
+          <a href="/wave/<%= item.email %>" class="btn btn-primary w-100">Unwave 👋</a>
         </div>
     </div>
     <% } %>
